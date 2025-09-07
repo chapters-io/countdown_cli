@@ -6,11 +6,12 @@ import msvcrt
 import pygame
 
 class CountdownTimer:
-    def __init__(self, minutes):
+    def __init__(self, minutes, info = ""):
         self.seconds = int(minutes * 60)
         self.paused = False
         self.stopped = False
         self.pbar = None
+        self.info = info
 
     def pause(self):
         if not self.paused:
@@ -30,7 +31,7 @@ class CountdownTimer:
 
     def run(self):
         with tqdm(total=self.seconds, initial=self.seconds) as self.pbar:
-            self.pbar.set_description("Countdown")
+            self.pbar.set_description("Countdown " + self.info)
             while self.pbar.n > 0 and not self.stopped:
                 if msvcrt.kbhit():
                     key = msvcrt.getch().decode('utf-8').lower()
@@ -59,25 +60,26 @@ class CountdownTimer:
                 time.sleep(0.1)
 
 
-def countdown(minutes):
+def countdown(minutes, info):
     """
     Starts a countdown timer for the specified number of minutes.
 
     Args:
         minutes: The number of minutes to count down from.
     """
-    timer = CountdownTimer(minutes)
+    timer = CountdownTimer(minutes, info)
     timer.run()
 
 if __name__ == "__main__":
     pygame.init()
     os.system('cls' if os.name == 'nt' else 'clear')
-    if len(sys.argv) != 2:
+    if len(sys.argv) < 2:
         print("Usage: python countdown.py <minutes>")
         sys.exit(1)
 
     try:
         minutes = float(sys.argv[1])
+        info = sys.argv[2]
         if minutes <= 0:
             raise ValueError
     except ValueError:
@@ -85,4 +87,4 @@ if __name__ == "__main__":
         sys.exit(1)
 
     print("Press 'p' to pause, 'c' to continue, and 'x' to stop.")
-    countdown(minutes)
+    countdown(minutes , info)
