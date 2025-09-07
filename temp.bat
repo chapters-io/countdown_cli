@@ -9,3 +9,5 @@ pause
 :doit
 call python countdown.py %~1 %~2
 call cat todo.txt -l
+pause
+
